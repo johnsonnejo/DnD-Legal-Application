@@ -1,0 +1,50 @@
+#!/bin/bash
+cd /opt
+sudo yum install unzip wget git -y
+sudo yum install java -y
+sudo yum update
+sudo wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.14/bin/apache-tomcat-10.1.14.tar.gz
+sudo tar -xvf apache-tomcat-10.1.14.tar.gz
+sudo rm apache-tomcat-10.1.14.tar.gz
+sudo mv apache-tomcat-10.1.14 tomcat
+sudo chmod 777 -R /opt/tomcat
+sudo sh /opt/tomcat/bin/startup.sh
+sudo ln -s /opt/tomcat/bin/startup.sh /usr/bin/starttomcat
+sudo ln -s /opt/tomcat/bin/shutdown.sh /usr/bin/stoptomcat
+sudo starttomcat
+
+
+
+scp -i DnD.pem DnD.pem ec2-user@10.0.0.171:/home/ec2-user
+
+scp -i DnD.pem sample.war ec2-user@10.0.0.171:/opt/tomcat/webapps  ----AppServer1
+scp -i DnD.pem sample.war ec2-user@10.0.0.146:/opt/tomcat/webapps  ----AppServer2
+scp -i DnD.pem sample.war ec2-user@10.0.0.228:/opt/tomcat/webapps  ----AppServer3
+scp -i DnD.pem sample.war ec2-user@10.0.0.236:/opt/tomcat/webapps  ----AppServer4
+scp -i DnD2.pem.pem sample.war ec2-user@172.0.0.159:/opt/tomcat/webapps  ----AppServer5
+scp -i DnD2.pem.pem sample.war ec2-user@172.0.0.224:/opt/tomcat/webapps  ----AppServer6
+scp -i DnD2.pem.pem sample.war ec2-user@3.135.203.58:/opt/tomcat/webapps  ----JumpServer
+
+
+AppServer5: 172.0.0.159
+AppServer: 172.0.0.224
+JumpServer: 3.135.203.58
+
+
+curl -L 172.0.0.224:8080/sample
+-----------------------------------------------------------------------------------
+
+Load balancers:
+
+NLB: NetLoadBalancer-DnD
+Target Group: TG-DnD
+
+ALB: AppLoadBalancer-Dnd
+Target Group: TargetGrp-DnD
+
+Network Load Balancer DNS Name/A record: NetLoadBalancer-DnD-2b89ea082b799f1c.elb.us-east-1.amazonaws.com
+App Load Balancer DNS Name/A record: LoadBalancer-Dnd-1310096054.us-east-1.elb.amazonaws.com
+
+nslookup <LoadBalancerDNSName>
+nslookup NetLoadBalancer-DnD-2b89ea082b799f1c.elb.us-east-1.amazonaws.com
+nslookup Apploadbalancer-dnd-1819712324.us-east-1.elb.amazonaws.com/

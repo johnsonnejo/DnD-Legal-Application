@@ -1,0 +1,9 @@
+Username: Database-Admin
+Passws: x4H3#}i#
+
+
+
+
+Master username: postgre
+
+Initial database name: postgre

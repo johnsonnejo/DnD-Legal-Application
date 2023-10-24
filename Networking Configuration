@@ -1,0 +1,94 @@
+VPC Peering: Connect VPCs to each other
+
+  VPC CIDR Block:
+    A: 10.0.0.0/24
+
+    B: 172.0.0.0/24
+
+Labs: 
+  VPC-1: us-east-1
+    - vpc1-DnD
+      - 10.0.0.0/24
+
+  Subnets:
+    - public-sn-a: us-east-1a
+      - 10.0.0.0/26
+    - public-sn-b: us-east-1b  
+      - 10.0.0.64/26
+
+    - private-sn-a: us-east-1a
+      - 10.0.0.128/26
+    - private-sn-b: us-east-1b
+      - 10.0.0.192/26
+
+  Route Tables:
+    - public-rt-1
+    - private-rt-1
+
+  Internet Gateway:
+    - igw-1
+
+  NAT Gateway: 10.0.0.102
+    - natgw-1
+
+  Keypair: dnd.pem
+
+  JumpServer - DnD:
+    PublicIP: 54.85.59.17
+    PrivateIP: 10.0.0.62
+  
+  AppServer1:
+    PrivateIP: 10.0.0.133
+
+#copy keypair into JumpServer from local
+scp -i DnD.pem DnD.pem ec2-user@54.235.19.134:/home/ec2-user
+
+# ssh into AppServer from JumpServer
+ssh -i "DnD.pem" ec2-user@10.0.0.133
+
+# ssh into JumpServer from local
+ssh -i "DnD.pem" ec2-user@54.235.19.134
+
+
+.....................................
+
+  VPC-2: us-east-2
+    - vpc2-DnD
+      - 172.0.0.0/24
+
+  Subnets:
+    - public-sn-a: us-east-2a
+      - 172.0.0.0/26
+    - public-sn-b: us-east-2b  
+      - 172.0.0.64/26
+
+    - private-sn-a: us-east-2a
+      - 172.0.0.128/26
+    - private-sn-b: us-east-2b
+      - 172.0.0.192/26
+
+  Route Tables:
+    - private-rt-2
+
+public-sn-b: us-east-2b
+
+Internet Gateway:
+    - igw-2
+
+NAT Gateway: 172.0.0.47
+    - natgw-2
+
+Keypair: DnD2.pem.pem
+
+
+appServer2:
+PrivateIP: 172.0.0.64
+
+ssh -i "DnD2.pem.pem" ec2-user@172.0.0.64
+scp -i DnD.pem DnD2.pem.pem ec2-user@54.82.70.190:/home/ec2-user
+
+ssh -i "DnD.pem" ec2-user@54.82.70.190
+
+chmod 400 DnD2.pem.pem
+
+ssh -i "DnD2.pem.pem" ec2-user@172.0.0.64
